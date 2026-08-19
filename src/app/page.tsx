@@ -4,11 +4,11 @@ import { HomeHero } from "@/components/home/hero";
 import { HomeProductChapter } from "@/components/home/product-chapter";
 import { TestimonialRotator } from "@/components/home/testimonial-rotator";
 import { Reveal } from "@/components/motion/reveal";
-import { Container } from "@/components/ui/container";
 import { SectionEyebrow } from "@/components/ui/eyebrow";
 import { ArrowButton } from "@/components/ui/arrow-button";
 import { ZoomImage } from "@/components/ui/zoom-image";
 import { deliveryZones } from "@/lib/site-data";
+import { MobileProcessDna } from "@/components/home/mobile-process-dna";
 import { client } from "@/sanity/lib/client";
 import { TESTIMONIALS_QUERY } from "@/sanity/lib/queries";
 
@@ -294,25 +294,33 @@ export default async function HomePage() {
               pack, deliver.
             </h2>
           </div>
-          <Reveal style={{ display: "grid", borderTop: "1px solid rgba(245,240,232,.18)" }} className="grid-cols-1 md:!grid-cols-5">
-            {PROCESS_STEPS.map((step, i) => (
-              <div
-                key={step.n}
-                style={{
-                  borderRight: i < PROCESS_STEPS.length - 1 ? "1px solid rgba(245,240,232,.18)" : undefined,
-                  padding: `34px ${i === PROCESS_STEPS.length - 1 ? 0 : 22}px 40px ${i === 0 ? 0 : 22}px`,
-                }}
-              >
-                <div className="font-mono" style={{ fontSize: 11, letterSpacing: ".2em", color: "var(--color-gold)", marginBottom: 22 }}>
-                  {step.n}
+          {/* Mobile Scroll-linked DNA Helix view */}
+          <div className="block md:hidden border-t border-white/10 pt-8">
+            <MobileProcessDna steps={PROCESS_STEPS} />
+          </div>
+
+          {/* Desktop structured horizontal process strip */}
+          <div className="hidden md:block">
+            <Reveal style={{ display: "grid", borderTop: "1px solid rgba(245,240,232,.18)" }} className="md:!grid-cols-5">
+              {PROCESS_STEPS.map((step, i) => (
+                <div
+                  key={step.n}
+                  style={{
+                    borderRight: i < PROCESS_STEPS.length - 1 ? "1px solid rgba(245,240,232,.18)" : undefined,
+                    padding: `34px ${i === PROCESS_STEPS.length - 1 ? 0 : 22}px 40px ${i === 0 ? 0 : 22}px`,
+                  }}
+                >
+                  <div className="font-mono" style={{ fontSize: 11, letterSpacing: ".2em", color: "var(--color-gold)", marginBottom: 22 }}>
+                    {step.n}
+                  </div>
+                  <div style={{ fontSize: "clamp(20px, 1.7vw, 26px)", fontWeight: 600, letterSpacing: "-.015em", marginBottom: 14 }}>
+                    {step.title}
+                  </div>
+                  <div style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(245,240,232,.55)" }}>{step.body}</div>
                 </div>
-                <div style={{ fontSize: "clamp(20px, 1.7vw, 26px)", fontWeight: 600, letterSpacing: "-.015em", marginBottom: 14 }}>
-                  {step.title}
-                </div>
-                <div style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(245,240,232,.55)" }}>{step.body}</div>
-              </div>
-            ))}
-          </Reveal>
+              ))}
+            </Reveal>
+          </div>
         </div>
       </section>
 

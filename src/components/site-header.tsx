@@ -17,7 +17,6 @@ const NAV_LINKS: { key: NavKey; label: string; href: string }[] = [
 const MENU_LINKS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
-  { label: "FAQ", href: "/faq" },
   { label: "Inside the Farm", href: "/inside-the-farm" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
@@ -97,6 +96,7 @@ export function SiteHeader() {
   // stops the moment the user scrolls back up.
   useEffect(() => {
     if (isMobile || !faqPeekEligible) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFaqPeekVisible(false);
       return;
     }
@@ -178,24 +178,30 @@ export function SiteHeader() {
                 Machakos, KE
               </span>
             )}
-            <Link
-              href="/order"
-              className="nn-arrow text-dark font-semibold whitespace-nowrap"
-              style={{
-                padding: isMobile ? "9px 13px" : "14px 24px",
-                fontSize: isMobile ? 11 : 15,
-                backgroundImage: "linear-gradient(to right, var(--color-gold), var(--color-orange))",
-              }}
-            >
-              Order Fresh Eggs <span>→</span>
-            </Link>
+            {!isMobile && (
+              <Link
+                href="/order"
+                className="nn-arrow text-dark font-semibold whitespace-nowrap"
+                style={{
+                  padding: "14px 24px",
+                  fontSize: 15,
+                  backgroundImage: "linear-gradient(to right, var(--color-gold), var(--color-orange))",
+                }}
+              >
+                Order Fresh Eggs <span>→</span>
+              </Link>
+            )}
             {isMobile && (
               <button
                 onClick={() => setMenuOpen(true)}
-                className="font-mono text-[11px] tracking-[.2em] uppercase bg-transparent border-0 cursor-pointer"
-                style={{ color: ink }}
+                aria-label="Open Menu"
+                className="flex items-center justify-center w-11 h-11 bg-transparent border-0 cursor-pointer p-0 -mr-2.5 focus:outline-none"
               >
-                Menu
+                <div className="flex flex-col justify-between w-6 h-3.5">
+                  <span className="w-full h-[2px] rounded-full transition-all duration-300" style={{ backgroundColor: ink }} />
+                  <span className="w-full h-[2px] rounded-full transition-all duration-300" style={{ backgroundColor: ink }} />
+                  <span className="w-full h-[2px] rounded-full transition-all duration-300" style={{ backgroundColor: ink }} />
+                </div>
               </button>
             )}
           </div>
@@ -271,50 +277,82 @@ export function SiteHeader() {
         </Link>
       )}
 
-      {/* Mobile full-screen menu */}
-      <div
-        className="fixed inset-0 z-[90] bg-dark flex flex-col justify-between gap-10 overflow-y-auto"
+      {/* Backdrop Dimmer Overlay */}
+      <div 
+        className="fixed inset-0 z-[90] bg-black/40 backdrop-blur-xs transition-opacity duration-500"
         style={{
-          padding: "28px 24px 40px",
           opacity: menuOpen ? 1 : 0,
           pointerEvents: menuOpen ? "auto" : "none",
-          transition: "opacity .5s var(--ease-editorial)",
+        }}
+        onClick={() => setMenuOpen(false)}
+      />
+
+      {/* Mobile menu (iOS bottom sheet style) */}
+      <div
+        className="fixed inset-x-0 bottom-0 z-[95] bg-[#141414]/94 backdrop-blur-2xl flex flex-col justify-between border-t border-white/10 shadow-[0_-15px_40px_rgba(0,0,0,0.5)] rounded-t-[28px] overflow-hidden"
+        style={{
+          height: "calc(100vh - 56px)",
+          transform: menuOpen ? "translateY(0)" : "translateY(100%)",
+          opacity: menuOpen ? 1 : 0,
+          pointerEvents: menuOpen ? "auto" : "none",
+          transition: "transform 0.5s cubic-bezier(0.32, 0.94, 0.6, 1), opacity 0.4s ease",
+          padding: "20px 20px 32px",
         }}
       >
-        <div className="flex justify-between items-center">
-          <span className="font-mono text-[11px] tracking-[.2em] uppercase text-cream/50">Machakos, KE</span>
-          <button
-            onClick={() => setMenuOpen(false)}
-            className="bg-transparent border-0 text-cream font-mono text-[11px] tracking-[.2em] uppercase cursor-pointer py-2"
-          >
-            Close
-          </button>
-        </div>
-        <nav className="flex flex-col gap-1.5">
-          {MENU_LINKS.map((link) => (
-            <Link
-              key={link.label}
-              href={link.href}
+        <div>
+          {/* iOS Grab Bar */}
+          <div className="w-12 h-1 bg-white/20 rounded-full mx-auto mb-6" />
+
+          {/* Sheet Header */}
+          <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col">
+              <span className="font-mono text-[10px] tracking-[.2em] uppercase text-cream/40">N&amp;N Poultry Palace</span>
+              <span className="font-mono text-[11px] tracking-[.1em] text-cream/60 mt-0.5">Machakos, KE</span>
+            </div>
+            <button
               onClick={() => setMenuOpen(false)}
-              className="nn-menu-link text-cream font-bold tracking-tight leading-[1.15]"
-              style={{ fontSize: "clamp(30px, 8vh, 56px)" }}
+              aria-label="Close menu"
+              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/15 border border-white/5 flex items-center justify-center text-white active:scale-90 transition-all cursor-pointer focus:outline-none"
             >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+              <span className="text-[13px] font-semibold">✕</span>
+            </button>
+          </div>
+
+          {/* Grouped iOS Settings Style Rows */}
+          <div className="bg-white/[0.04] border border-white/10 rounded-2xl divide-y divide-white/[0.06] overflow-hidden mb-6">
+            {MENU_LINKS.map((link, idx) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between px-5 py-4.5 text-white hover:bg-white/[0.04] active:bg-white/[0.08] transition-colors group"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="font-mono text-[11px] text-cream/30">0{idx + 1}</span>
+                  <span className="text-[17px] font-medium tracking-tight group-hover:text-gold transition-colors">{link.label}</span>
+                </div>
+                <span className="text-white/30 text-[15px] font-mono group-hover:translate-x-1 transition-transform">→</span>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Footer Area with iOS Call to Action */}
         <div className="flex flex-col gap-5">
-          <div className="flex items-center gap-2.5">
-            <span className="w-[7px] h-[7px] rounded-full bg-status-on nn-status-dot" />
-            <span className="font-mono text-[11px] tracking-[.16em] uppercase text-cream/60">
+          <div className="flex items-center gap-2.5 px-1">
+            <span className="w-[7.5px] h-[7.5px] rounded-full bg-status-on nn-status-dot" />
+            <span className="font-mono text-[11px] tracking-[.16em] uppercase text-cream/50">
               Eggs, manure &amp; hens available
             </span>
           </div>
           <Link
             href="/order"
             onClick={() => setMenuOpen(false)}
-            className="nn-arrow text-dark justify-between px-[26px] py-[22px] text-[18px] font-semibold"
-            style={{ backgroundImage: "linear-gradient(to right, var(--color-gold), var(--color-orange))" }}
+            className="nn-arrow text-dark justify-between px-6 py-4.5 text-[16px] font-semibold rounded-2xl transition-all active:scale-[0.98]"
+            style={{ 
+              backgroundImage: "linear-gradient(to right, var(--color-gold), var(--color-orange))",
+              boxShadow: "0 8px 24px rgba(236,204,116,0.15)"
+            }}
           >
             Order Fresh Eggs <span>→</span>
           </Link>

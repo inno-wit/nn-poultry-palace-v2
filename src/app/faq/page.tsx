@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Reveal } from "@/components/motion/reveal";
 import { ArrowButton } from "@/components/ui/arrow-button";
-import { FaqExplorer } from "@/components/faq/faq-explorer";
-import { productsData, productSlugs } from "@/lib/products-data";
+import FAQs from "@/components/ui/text-reveal-faqs";
 
 export const metadata: Metadata = {
   title: "FAQ",
@@ -11,11 +10,9 @@ export const metadata: Metadata = {
 };
 
 export default function FaqPage() {
-  const topics = productSlugs.map((slug) => productsData[slug]);
-
   return (
     <>
-      <FaqExplorer topics={topics} />
+      <FAQs />
 
       {/* Final CTA */}
       <Reveal
