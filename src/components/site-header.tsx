@@ -145,10 +145,10 @@ export function SiteHeader() {
         >
           <Link href="/" className="flex items-center">
             <Image
-              src="/nn-logo-mark.png"
+              src="/Aug 19, 2026, 01_271_17 PM.png"
               alt="N&N Poultry Palace"
-              width={4501}
-              height={2251}
+              width={300}
+              height={100}
               style={{ height: 70, width: "auto" }}
               priority
             />

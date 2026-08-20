@@ -119,9 +119,6 @@ export function ProductDossierDetail({ product }: { product: ProductDetail }) {
             04 / Details
           </div>
           <div className="col-span-12 md:col-span-5 md:col-start-3">
-            <h3 style={{ margin: "0 0 30px", fontSize: "clamp(26px, 2.6vw, 38px)", fontWeight: 600, letterSpacing: "-.02em", lineHeight: 1.1 }}>
-              {product.details.heading}
-            </h3>
             <ul className="list-none p-0 m-0" style={{ borderTop: "1px solid rgba(17,17,17,.16)" }}>
               {product.details.bullets.map((bullet) => (
                 <li key={bullet} className="flex gap-4" style={{ padding: "16px 0", borderBottom: "1px solid rgba(17,17,17,.16)", fontSize: 17, lineHeight: 1.6 }}>

@@ -1,16 +1,82 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { ArrowButton } from "@/components/ui/arrow-button";
 import { StatusDot } from "@/components/ui/status-dot";
 import { Container } from "@/components/ui/container";
 import { useNairobiTime } from "@/components/ui/use-nairobi-time";
 import { prefersReducedMotion } from "@/lib/motion";
 
+const slides = [
+  {
+    slug: "table-eggs",
+    title: (
+      <>
+        Every Egg, Every Day
+        <br />
+        Done right.
+      </>
+    ),
+    eyebrow: "01 / Table Eggs",
+    description: "Eggs laid here, graded here, dispatched from here. No cold storage, no middlemen — a family farm in Machakos County that has been getting the ordinary thing right since 2021.",
+    accent: "var(--color-gold)",
+    imageUrl: "/assets/education/grading-of-eggs.jpeg",
+    primaryCta: "/order",
+    primaryText: "Order Table Eggs",
+    secondaryCta: "/inside-the-farm",
+    secondaryText: "Explore the Farm",
+  },
+  {
+    slug: "poultry-manure",
+    title: (
+      <>
+        What the barn
+        <br />
+        gives the soil.
+      </>
+    ),
+    eyebrow: "02 / Poultry Manure",
+    description: "Bagged organic fertilizer, nutrient-rich for gardens, farms and commercial agriculture. Naturally sun-dried, with nothing added — a circular farm in Machakos.",
+    accent: "var(--color-sage)",
+    imageUrl: "/assets/education/poultry-manure.png",
+    primaryCta: "/order",
+    primaryText: "Order Manure",
+    secondaryCta: "/products#poultry-manure",
+    secondaryText: "Manure Details",
+  },
+  {
+    slug: "ex-layer-hens",
+    title: (
+      <>
+        The end of
+        <br />
+        a good cycle.
+      </>
+    ),
+    eyebrow: "03 / Ex-Layer Hens",
+    description: "Healthy hens sold at the end of their laying cycle — suitable for meat use or traditional cooking. Raised with care, fed well, housed clean on our family farm.",
+    accent: "var(--color-terracotta)",
+    imageUrl: "/assets/education/layer-hens.jpeg",
+    primaryCta: "/order",
+    primaryText: "Enquire on Hens",
+    secondaryCta: "/products#ex-layer-hens",
+    secondaryText: "Hens Details",
+  },
+];
+
 export function HomeHero() {
   const imgRef = useRef<HTMLDivElement>(null);
   const time = useNairobiTime();
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const SLIDE_DURATION = 6000;
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % slides.length);
+  }, []);
 
   useEffect(() => {
     if (prefersReducedMotion()) return;
@@ -32,97 +98,141 @@ export function HomeHero() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (isPaused) return;
+
+    const slideTimeout = setInterval(() => {
+      nextSlide();
+    }, SLIDE_DURATION);
+
+    return () => {
+      clearInterval(slideTimeout);
+    };
+  }, [currentIndex, isPaused, nextSlide]);
+
+  const currentSlide = slides[currentIndex];
+
   return (
     <section
       className="relative flex flex-col justify-end overflow-hidden"
       style={{ minHeight: "100vh", background: "var(--color-dark)" }}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
     >
+      {/* Dynamic Full Screen Backgrounds with elegant Cross-Fade */}
       <div ref={imgRef} className="absolute" style={{ inset: "-34px 0" }}>
-        <Image
-          src="/assets/education/grading-of-eggs.jpeg"
-          alt="Stacking trays of graded eggs at the N&N farm"
-          fill
-          priority
-          sizes="100vw"
-          style={{
-            objectFit: "cover",
-            objectPosition: "62% 50%",
-            animation: "nn-hero-settle 2.4s var(--ease-editorial) both",
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(17,17,17,.9) 0%, rgba(17,17,17,.62) 44%, rgba(17,17,17,.12) 78%, rgba(17,17,17,.3) 100%)",
-          }}
-        />
+        {slides.map((slide, i) => (
+          <div
+            key={slide.slug}
+            className="absolute inset-0 transition-all duration-1000 ease-in-out"
+            style={{
+              opacity: i === currentIndex ? 1 : 0,
+              zIndex: i === currentIndex ? 1 : 0,
+              transform: i === currentIndex ? "scale(1)" : "scale(1.05)",
+            }}
+          >
+            <Image
+              src={slide.imageUrl}
+              alt={slide.slug}
+              fill
+              priority={i === 0}
+              sizes="100vw"
+              style={{
+                objectFit: "cover",
+                objectPosition: "50% 50%",
+              }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(17,17,17,.92) 0%, rgba(17,17,17,.68) 44%, rgba(17,17,17,.2) 78%, rgba(17,17,17,.3) 100%)",
+              }}
+            />
+          </div>
+        ))}
       </div>
 
       <div
         className="relative grid grid-cols-12 gap-8"
-        style={{ padding: "200px clamp(20px, 4vw, 56px) 0", alignContent: "center", flex: 1, maxWidth: "var(--container-site)", margin: "0 auto", width: "100%" }}
+        style={{ padding: "180px clamp(20px, 4vw, 56px) 40px", alignContent: "center", flex: 1, maxWidth: "var(--container-site)", margin: "0 auto", width: "100%", zIndex: 10 }}
       >
-        <div className="col-span-12 md:col-span-7">
-          <div className="nn-hero-in flex items-center gap-3.5" style={{ marginBottom: 34, animationDelay: ".2s" }}>
-            <span style={{ width: 44, height: 1, background: "var(--color-gold)", display: "inline-block" }} />
-            <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".24em", color: "var(--color-gold)" }}>
-              Machakos / Kenya
+        <div className="col-span-12 md:col-span-8 lg:col-span-7">
+          {/* Eyebrow / Slug */}
+          <div 
+            key={`eyebrow-${currentIndex}`}
+            className="nn-hero-in flex items-center gap-3.5" 
+            style={{ marginBottom: 34, animationDelay: ".15s" }}
+          >
+            <span style={{ width: 44, height: 1, background: currentSlide.accent, display: "inline-block", transition: "background-color 0.8s ease" }} />
+            <span className="font-mono uppercase" style={{ fontSize: 11, letterSpacing: ".24em", color: currentSlide.accent, transition: "color 0.8s ease" }}>
+              {currentSlide.eyebrow}
             </span>
           </div>
+
+          {/* Dynamic Title */}
           <h1
+            key={`title-${currentIndex}`}
             className="nn-hero-in"
             style={{
               margin: 0,
-              fontSize: "clamp(52px, 8.4vw, 122px)",
+              fontSize: "clamp(48px, 8vw, 110px)",
               fontWeight: 800,
-              lineHeight: 0.87,
+              lineHeight: 0.9,
               letterSpacing: "-.038em",
               color: "var(--color-cream)",
-              animationDelay: ".34s",
+              animationDelay: ".25s",
             }}
           >
-            From our flock
-            <br />
-            to your table.
+            {currentSlide.title}
           </h1>
+
+          {/* Dynamic Description */}
           <p
+            key={`desc-${currentIndex}`}
             className="nn-hero-in"
             style={{
-              marginTop: 34,
-              maxWidth: "44ch",
-              fontSize: "clamp(18px, 1.5vw, 22px)",
+              marginTop: 28,
+              maxWidth: "46ch",
+              fontSize: "clamp(17px, 1.4vw, 21px)",
               lineHeight: 1.55,
-              color: "rgba(245,240,232,.72)",
-              animationDelay: ".48s",
+              color: "rgba(245,240,232,.75)",
+              animationDelay: ".35s",
             }}
           >
-            Eggs laid here, graded here, dispatched from here. No cold storage, no middlemen — a
-            family farm in Machakos County that has been getting the ordinary thing right since
-            2021.
+            {currentSlide.description}
           </p>
-          <div className="nn-hero-in flex flex-wrap gap-4" style={{ marginTop: 44, animationDelay: ".62s" }}>
-            <ArrowButton href="/order" variant="primary" size="hero">
-              Order Fresh Eggs
+
+          {/* Dynamic Action Buttons */}
+          <div 
+            key={`buttons-${currentIndex}`}
+            className="nn-hero-in flex flex-wrap gap-4" 
+            style={{ marginTop: 38, animationDelay: ".45s" }}
+          >
+            <ArrowButton href={currentSlide.primaryCta} variant="primary" size="hero">
+              {currentSlide.primaryText}
             </ArrowButton>
-            <ArrowButton href="/inside-the-farm" variant="secondary" size="hero" onDark>
-              Explore the Farm
+            <ArrowButton href={currentSlide.secondaryCta} variant="secondary" size="hero" onDark>
+              {currentSlide.secondaryText}
             </ArrowButton>
           </div>
         </div>
+
+
       </div>
 
+      {/* Farm Status bottom strip */}
       <div
-        className="nn-hero-in relative"
+        className="relative"
         style={{
-          borderTop: "1px solid rgba(245,240,232,.16)",
-          background: "rgba(17,17,17,.55)",
-          animationDelay: ".8s",
+          borderTop: "1px solid rgba(245,240,232,.12)",
+          background: "rgba(17,17,17,.62)",
+          zIndex: 10,
         }}
       >
         <Container
           className="flex flex-wrap items-center justify-between"
-          style={{ padding: "22px clamp(20px, 4vw, 56px)", gap: "14px 44px" }}
+          style={{ padding: "20px clamp(20px, 4vw, 56px)", gap: "14px 44px" }}
         >
           <span className="font-mono uppercase" style={{ fontSize: 10, letterSpacing: ".24em", color: "var(--color-gold)" }}>
             Farm Status

@@ -1,7 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomeHero } from "@/components/home/hero";
-import { HomeProductChapter } from "@/components/home/product-chapter";
 import { TestimonialRotator } from "@/components/home/testimonial-rotator";
 import { Reveal } from "@/components/motion/reveal";
 import { SectionEyebrow } from "@/components/ui/eyebrow";
@@ -209,74 +208,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 03 Products intro */}
-      <section style={{ background: "var(--color-cream)", padding: "clamp(88px, 11vw, 170px) 0 0" }}>
-        <Reveal className="grid grid-cols-12 gap-8" style={{ padding: "0 clamp(20px, 4vw, 56px) clamp(48px, 6vw, 80px)", maxWidth: "var(--container-site)", margin: "0 auto" }}>
-          <div className="col-span-12 md:col-span-2">
-            <SectionEyebrow>Products</SectionEyebrow>
-          </div>
-          <div className="col-span-12 md:col-span-7 md:col-start-3">
-            <h2 style={{ margin: "0 0 20px", fontSize: "clamp(32px, 4.4vw, 62px)", fontWeight: 700, lineHeight: 1, letterSpacing: "-.03em" }}>
-              Three things. Each done properly.
-            </h2>
-            <p style={{ margin: 0, fontSize: 19, lineHeight: 1.6, color: "rgba(17,17,17,.66)", maxWidth: "46ch" }}>
-              The flock produces eggs, the barn produces manure, and at the end of the laying cycle the hens themselves. Nothing on this farm is wasted.
-            </p>
-          </div>
-        </Reveal>
 
-        <HomeProductChapter
-          eyebrowLabel="Table Eggs"
-          eyebrowColor="var(--color-gold)"
-          heading={<>Fresh eggs,<br />collected daily.</>}
-          body="Sold by the thirty-piece tray. Mixed grade, large and medium, inspected for shell integrity and size before packing."
-          metaRows={[
-            { label: "Collection", value: "Daily, from 2 PM" },
-            { label: "Unit", value: "30pc tray / bulk case" },
-            { label: "Best for", value: "Households · Bakeries · Kiosks" },
-          ]}
-          ctaLabel="Order Table Eggs"
-          ctaHref="/products#table-eggs"
-          image="/eggs.jpeg"
-          imageAlt="Trays of fresh N&N table eggs"
-          imageSide="right"
-        />
-
-        <HomeProductChapter
-          eyebrowLabel="Poultry Manure"
-          eyebrowColor="var(--color-sage)"
-          heading={<>What the barn<br />gives the soil.</>}
-          body="Nothing added, nothing treated. Dried naturally in the Machakos sun, which concentrates the nutrients and clears most pathogens."
-          metaRows={[
-            { label: "Composition", value: "Nitrogen · Phosphorus · Potassium" },
-            { label: "Unit", value: "70kg sack / FH truck" },
-            { label: "Coverage", value: "≈50–80 m² per sack" },
-          ]}
-          ctaLabel="Order Manure"
-          ctaHref="/products#poultry-manure"
-          image="/manure-hips.jpeg"
-          imageAlt="Poultry manure heaps drying in the sun"
-          imageSide="left"
-          background="rgba(122,158,126,.09)"
-        />
-
-        <HomeProductChapter
-          eyebrowLabel="Ex-Layer Hens"
-          eyebrowColor="var(--color-terracotta)"
-          heading={<>The end of<br />a good cycle.</>}
-          body="Healthy birds at 72–80 weeks, vet-inspected and raised on balanced feed. Firm meat, favoured for slow-cooked traditional dishes."
-          metaRows={[
-            { label: "Age", value: "72–80 weeks" },
-            { label: "Health", value: "Full vaccination programme" },
-            { label: "Collection", value: "Sold live, at the farm" },
-          ]}
-          ctaLabel="Enquire on Hens"
-          ctaHref="/products#ex-layer-hens"
-          image="/layers.jpeg"
-          imageAlt="Ex-layer hens at N&N Poultry Palace"
-          imageSide="right"
-        />
-      </section>
 
       {/* 04 Process strip */}
       <section style={{ background: "var(--color-dark)", color: "var(--color-cream)", padding: "clamp(80px, 10vw, 150px) clamp(20px, 4vw, 56px)" }}>
