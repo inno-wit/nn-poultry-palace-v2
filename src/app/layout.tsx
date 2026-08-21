@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type React from "react";
 import { Outfit, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { SiteHeader } from "@/components/site-header";
@@ -25,7 +26,11 @@ export const metadata: Metadata = {
     "Fresh and Nutritious — your trusted source for farm-fresh eggs in Machakos. Collected at 2 PM, packed by 5 PM, on your doorstep before noon.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="en" className={`${outfit.variable} ${plexMono.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-cream text-dark font-display">

@@ -7,7 +7,7 @@ import { SectionEyebrow } from "@/components/ui/eyebrow";
 import { ArrowButton } from "@/components/ui/arrow-button";
 import { ZoomImage } from "@/components/ui/zoom-image";
 import { deliveryZones } from "@/lib/site-data";
-import { MobileProcessDna } from "@/components/home/mobile-process-dna";
+import { ProcessStrokeFollow } from "@/components/home/process-stroke-follow";
 import { client } from "@/sanity/lib/client";
 import { TESTIMONIALS_QUERY } from "@/sanity/lib/queries";
 
@@ -210,51 +210,8 @@ export default async function HomePage() {
 
 
 
-      {/* 04 Process strip */}
-      <section style={{ background: "var(--color-dark)", color: "var(--color-cream)", padding: "clamp(80px, 10vw, 150px) clamp(20px, 4vw, 56px)" }}>
-        <div style={{ maxWidth: "var(--container-site)", margin: "0 auto" }}>
-          <div className="grid grid-cols-12 gap-8" style={{ marginBottom: "clamp(48px, 6vw, 88px)" }}>
-            <div className="col-span-12 md:col-span-2">
-              <SectionEyebrow color="var(--color-gold)">Process</SectionEyebrow>
-            </div>
-            <h2
-              className="col-span-12 md:col-span-7 md:col-start-3"
-              style={{ margin: 0, fontSize: "clamp(32px, 4.4vw, 62px)", fontWeight: 700, lineHeight: 1, letterSpacing: "-.03em" }}
-            >
-              Care, collect, grade,
-              <br />
-              pack, deliver.
-            </h2>
-          </div>
-          {/* Mobile Scroll-linked DNA Helix view */}
-          <div className="block md:hidden border-t border-white/10 pt-8">
-            <MobileProcessDna steps={PROCESS_STEPS} />
-          </div>
-
-          {/* Desktop structured horizontal process strip */}
-          <div className="hidden md:block">
-            <Reveal style={{ display: "grid", borderTop: "1px solid rgba(245,240,232,.18)" }} className="md:!grid-cols-5">
-              {PROCESS_STEPS.map((step, i) => (
-                <div
-                  key={step.n}
-                  style={{
-                    borderRight: i < PROCESS_STEPS.length - 1 ? "1px solid rgba(245,240,232,.18)" : undefined,
-                    padding: `34px ${i === PROCESS_STEPS.length - 1 ? 0 : 22}px 40px ${i === 0 ? 0 : 22}px`,
-                  }}
-                >
-                  <div className="font-mono" style={{ fontSize: 11, letterSpacing: ".2em", color: "var(--color-gold)", marginBottom: 22 }}>
-                    {step.n}
-                  </div>
-                  <div style={{ fontSize: "clamp(20px, 1.7vw, 26px)", fontWeight: 600, letterSpacing: "-.015em", marginBottom: 14 }}>
-                    {step.title}
-                  </div>
-                  <div style={{ fontSize: 15, lineHeight: 1.65, color: "rgba(245,240,232,.55)" }}>{step.body}</div>
-                </div>
-              ))}
-            </Reveal>
-          </div>
-        </div>
-      </section>
+      {/* 04 Process stroke scroll progress section (Light background for clear contrast) */}
+      <ProcessStrokeFollow steps={PROCESS_STEPS} />
 
       {/* 05 Founder quote */}
       <Reveal

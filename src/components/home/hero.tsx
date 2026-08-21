@@ -13,7 +13,7 @@ const slides = [
     slug: "table-eggs",
     title: (
       <>
-        Every Egg, Every Day
+        Every Egg, Every Day,
         <br />
         Done right.
       </>

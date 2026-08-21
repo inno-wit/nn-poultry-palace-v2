@@ -47,25 +47,27 @@ export function SiteHeader() {
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Separate, much larger threshold than `scrolled` (which only drives the header's own
-  // compact styling at 80px). The FAQ peek needs the hero well out of the way first, or it
-  // ends up overlapping hero copy the moment the header merely goes compact.
-  useEffect(() => {
-    const onScroll = () => setFaqPeekEligible(window.scrollY > window.innerHeight * 0.6);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+    const handleScroll = () => {
+      const top =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        window.scrollY ||
+        document.body.scrollTop ||
+        0;
+      setScrolled(top > 15);
+      setFaqPeekEligible(top > window.innerHeight * 0.5);
     };
-  }, []);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    document.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, [pathname]);
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 900px)");
@@ -124,8 +126,10 @@ export function SiteHeader() {
   }, [isMobile, faqPeekEligible]);
 
   const light = variant === "image" && !scrolled;
-  const ink = light ? "rgba(245,240,232,.85)" : "#111111";
-  const paddingY = scrolled ? 13 : variant === "image" ? 26 : 22;
+  const ink = light ? "rgba(245,240,232,0.95)" : "#111111";
+  const activeColor = light ? "var(--color-gold)" : "var(--color-terracotta)";
+  const paddingY = scrolled ? 12 : variant === "image" ? 22 : 18;
+  const logoHeight = scrolled ? 48 : 66;
 
   return (
     <>
@@ -133,9 +137,12 @@ export function SiteHeader() {
         ref={headerRef}
         className="fixed top-0 left-0 right-0 z-[80]"
         style={{
-          background: light ? "transparent" : "var(--color-cream)",
-          borderBottom: `1px solid ${light ? "transparent" : "rgba(17,17,17,.16)"}`,
-          transition: "background .5s var(--ease-editorial), padding .5s var(--ease-editorial), border-color .5s var(--ease-editorial)",
+          background: light ? "transparent" : "rgba(245,240,232,0.96)",
+          backdropFilter: light ? "none" : "blur(16px)",
+          WebkitBackdropFilter: light ? "none" : "blur(16px)",
+          borderBottom: `1px solid ${light ? "transparent" : "rgba(17,17,17,0.14)"}`,
+          boxShadow: scrolled ? "0 4px 24px -2px rgba(17,17,17,0.09), 0 2px 6px -1px rgba(17,17,17,0.04)" : "none",
+          transition: "background .4s var(--ease-editorial), padding .4s var(--ease-editorial), border-color .4s var(--ease-editorial), box-shadow .4s var(--ease-editorial)",
           padding: `${paddingY}px clamp(20px, 4vw, 56px)`,
         }}
       >
@@ -147,20 +154,27 @@ export function SiteHeader() {
             <Image
               src="/Aug 19, 2026, 01_271_17 PM.png"
               alt="N&N Poultry Palace"
-              width={300}
-              height={100}
-              style={{ height: 70, width: "auto" }}
+              width={260}
+              height={90}
+              style={{
+                height: logoHeight,
+                width: "auto",
+                transition: "height .4s var(--ease-editorial)",
+              }}
               priority
             />
           </Link>
 
           {!isMobile && (
-            <nav className="flex items-center gap-8 text-[15px] font-medium transition-colors duration-500" style={{ color: ink }}>
+            <nav className="flex items-center gap-8 text-[15px] transition-colors duration-400">
               {NAV_LINKS.map((link) => (
                 <Link
                   key={link.label}
                   href={link.href}
-                  style={{ color: active === link.key ? "#c0613b" : undefined }}
+                  style={{
+                    color: active === link.key ? activeColor : ink,
+                    fontWeight: active === link.key ? 600 : 500,
+                  }}
                   className="nn-navlink hover:text-gold transition-colors"
                 >
                   {link.label}
@@ -172,7 +186,7 @@ export function SiteHeader() {
           <div className="flex items-center gap-5">
             {!isMobile && (
               <span
-                className="font-mono text-[10px] tracking-[.2em] uppercase transition-colors duration-500"
+                className="font-mono text-[10px] tracking-[.2em] uppercase transition-colors duration-400"
                 style={{ color: light ? "rgba(245,240,232,.55)" : "rgba(17,17,17,.5)" }}
               >
                 Machakos, KE

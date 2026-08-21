@@ -1,0 +1,6 @@
+{
+  "name": "N&N Poultry Palace",
+  "description": "Fresh eggs, organic manure, and ex-layer hens farm website in Machakos, Kenya with order concierge, product dossiers, and farm notes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
